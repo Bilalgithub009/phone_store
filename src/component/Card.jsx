@@ -13,7 +13,9 @@ export default function Card() {
                     "https://dummyjson.com/products/category/mobile-accessories"
                 ];
 
-                const allData = await Promise.all(urls.map(url => fetch(url).then(res => res.json())));
+                const allData = await Promise.all(
+                    urls.map(url => fetch(url).then(res => res.json()))
+                );
 
                 const combinedProducts = [
                     ...allData[0].products,
@@ -23,7 +25,6 @@ export default function Card() {
 
                 setProducts(combinedProducts);
                 setLoading(false);
-
             } catch (error) {
                 console.error(error);
             }
@@ -33,49 +34,63 @@ export default function Card() {
     }, []);
 
     if (loading) {
-        return <p className="text-center text-lg font-semibold mt-10">Loading products...</p>;
+        return (
+            <p className="text-center text-lg font-semibold mt-14">
+                Loading products...
+            </p>
+        );
     }
 
     return (
         <>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-center mt-10 mb-6 
-               bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 
-               bg-clip-text text-transparent tracking-wide">
+            {/* Section Heading */}
+            <h1 className="text-3xl md:text-4xl font-extrabold text-center mt-14 mb-8
+               bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600
+               bg-clip-text text-transparent">
                 Hot Selling Products
             </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-10 max-w-7xl mx-auto mb-10">
+            {/* Cards Grid */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
 
-                {products.map((item) => (
-                    <div
-                        key={item.id}
-                        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                    >
+                    {products.map((item) => (
+                        <div
+                            key={item.id}
+                            className="bg-white rounded-xl shadow-sm overflow-hidden
+                            hover:shadow-xl transition duration-300 group"
+                        >
+                            {/* Image */}
+                            <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
+                                <img
+                                    src={item.thumbnail}
+                                    alt={item.title}
+                                    className="w-full h-full object-contain sm:object-cover
+                                    group-hover:scale-105 transition duration-300"
+                                />
+                            </div>
 
-                        <div className="aspect-square w-full overflow-hidden bg-gray-200">
-                            <img
-                                className="w-full h-full object-cover object-center"
-                                src={item.thumbnail}
-                                alt={item.title}
-                            />
-                        </div>
+                            {/* Content */}
+                            <div className="p-3 sm:p-4">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                                    Rs {item.price}
+                                </h2>
 
-                        <div className="p-4">
-                            <h2 className="text-xl font-bold text-gray-800">Rs {item.price}</h2>
+                                <p className="text-sm sm:text-base text-gray-800 font-medium mt-1 line-clamp-2">
+                                    {item.title}
+                                </p>
 
-                            <p className="text-black font-bold capitalize mt-2 line-clamp-2">{item.title}</p>
-
-                            <div className="mt-4 flex justify-between items-center font-semibold">
-                                <span>{item.brand}</span>
-                                <span className="text-yellow-500">
-                                    {"★".repeat(Math.floor(item.rating || 4))}
-                                </span>
+                                <div className="mt-3 flex items-center justify-between text-sm font-semibold text-gray-600">
+                                    <span className="truncate">{item.brand}</span>
+                                    <span className="text-yellow-500">
+                                        {"★".repeat(Math.floor(item.rating || 4))}
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                    ))}
 
-                    </div>
-                ))}
-
+                </div>
             </div>
         </>
     );
